@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/auth";
 import { cookies } from "next/headers";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     const token = cookies().get("session")?.value;
     if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -11,13 +11,14 @@ export async function GET(request: Request) {
     const payload = await verifySession(token);
     if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+    const prisma = await getPrisma();
     const calculations = await prisma.calculation.findMany({
       where: { userId: payload.userId as string },
       orderBy: { createdAt: "desc" },
     });
 
     return NextResponse.json(calculations);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
@@ -33,6 +34,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { calculatorType = "PID", businessType = null, inputs, results } = body;
 
+    const prisma = await getPrisma();
     const calculation = await prisma.calculation.create({
       data: {
         userId: payload.userId as string,
@@ -44,7 +46,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true, calculation });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

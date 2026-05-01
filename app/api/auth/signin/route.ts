@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { verifyPassword, createSession, generateOTP } from "@/lib/auth";
 import { sendOTPEmail } from "@/lib/email";
 import { z } from "zod";
@@ -21,6 +21,7 @@ export async function POST(request: Request) {
 
     const { email, password } = result.data;
 
+    const prisma = await getPrisma();
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user || !(await verifyPassword(password, user.passwordHash))) {
@@ -51,7 +52,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ message: "Sign in successful" });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

@@ -1,16 +1,17 @@
 import { PrismaClient } from "@prisma/client"
-import { createClient } from "@libsql/client"
-import { PrismaLibSQL } from "@prisma/adapter-libsql"
+import { PrismaLibSql } from "@prisma/adapter-libsql"
 
-const libsql = createClient({
-  url: process.env.TURSO_DATABASE_URL || "file:./dev.db",
-  authToken: process.env.TURSO_AUTH_TOKEN,
-})
+let prisma: PrismaClient | undefined
 
-const adapter = new PrismaLibSQL(libsql)
+export async function getPrisma() {
+  if (!prisma) {
+    const adapter = await new PrismaLibSql({
+      url: process.env.TURSO_DATABASE_URL || "file:./dev.db",
+      authToken: process.env.TURSO_AUTH_TOKEN,
+    }).connect()
 
-const globalForPrisma = global as unknown as { prisma: PrismaClient }
+    prisma = new PrismaClient({ adapter: adapter as never })
+  }
 
-export const prisma = globalForPrisma.prisma || new PrismaClient({ adapter })
-
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
+  return prisma
+}

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { hashPassword, generateOTP } from "@/lib/auth";
 import { sendOTPEmail } from "@/lib/email";
 import { z } from "zod";
@@ -21,6 +21,7 @@ export async function POST(request: Request) {
 
     const { name, email, password } = result.data;
 
+    const prisma = await getPrisma();
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return NextResponse.json({ error: "Email already in use" }, { status: 400 });
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
     await sendOTPEmail(email, otp);
 
     return NextResponse.json({ message: "OTP sent successfully" });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

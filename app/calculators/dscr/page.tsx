@@ -56,7 +56,7 @@ export default function DSCRCalculator() {
       } else {
         setSaveMessage("Failed to save.")
       }
-    } catch (_) {
+    } catch {
       setSaveMessage("Error saving.")
     } finally {
       setIsSaving(false)

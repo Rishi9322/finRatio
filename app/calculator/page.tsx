@@ -96,7 +96,7 @@ export default function CalculatorPage() {
       
       // Clear AI analysis when inputs change
       setAiAnalysis(null)
-    } catch (_) {
+    } catch {
       // ignore
     }
   }

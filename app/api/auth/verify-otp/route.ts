@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import { createSession } from "@/lib/auth";
 import { z } from "zod";
 import { cookies } from "next/headers";
@@ -20,6 +20,7 @@ export async function POST(request: Request) {
 
     const { email, otp } = result.data;
 
+    const prisma = await getPrisma();
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user || user.otpCode !== otp) {
@@ -50,7 +51,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ message: "Verification successful" });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

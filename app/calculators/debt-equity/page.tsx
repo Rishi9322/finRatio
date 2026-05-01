@@ -56,7 +56,7 @@ export default function DebtEquityCalculator() {
       } else {
         setSaveMessage("Failed to save.")
       }
-    } catch (_) {
+    } catch {
       setSaveMessage("Error saving.")
     } finally {
       setIsSaving(false)
@@ -73,7 +73,7 @@ export default function DebtEquityCalculator() {
             Debt Equity Ratio Calculator
           </h1>
           <p className="text-slate-600 dark:text-slate-400 max-w-3xl">
-            Evaluate a company's financial leverage by dividing its total liabilities by stockholder equity. 
+            Evaluate a company&apos;s financial leverage by dividing its total liabilities by stockholder equity. 
             A higher ratio generally indicates a higher risk profile.
           </p>
         </div>
