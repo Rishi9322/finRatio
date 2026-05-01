@@ -1,6 +1,6 @@
-# Finana
+# FinRatio
 
-Finana is a Next.js financial analysis app for business credit and ratio-based calculations. It includes authentication, a protected dashboard, calculator workflows, PDF export support, and AI-assisted analysis.
+FinRatio is a Next.js financial analysis app for business credit and ratio-based calculations. It includes authentication, a protected dashboard, calculator workflows, PDF export support, and AI-assisted analysis.
 
 ## Features
 
@@ -65,6 +65,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - The local SQLite database lives in `prisma/dev.db`.
 - Authentication routes are under `app/auth` and `app/api/auth`.
 - Protected routes include `/dashboard` and `/calculator`.
+- For Vercel, set `DATABASE_URL`, `JWT_SECRET`, `OPENROUTER_API_KEY`, and `RESEND_API_KEY` in the project environment settings.
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
