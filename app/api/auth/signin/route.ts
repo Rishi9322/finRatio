@@ -52,7 +52,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ message: "Sign in successful" });
-  } catch {
+  } catch (error) {
+    console.error("[api/auth/signin]", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

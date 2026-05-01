@@ -45,7 +45,8 @@ export async function POST(request: Request) {
     await sendOTPEmail(email, otp);
 
     return NextResponse.json({ message: "OTP sent successfully" });
-  } catch {
+  } catch (error) {
+    console.error("[api/auth/signup]", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
