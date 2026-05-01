@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
-    "@libsql/client": "^0.17.3",
-    "@prisma/adapter-libsql": "^7.8.0",
+    "@libsql/client": "^0.8.0",
+    "@prisma/adapter-libsql": "^6.4.1",
     "@prisma/client": "^6.4.1",
     "bcryptjs": "^3.0.3",
     "html2canvas": "^1.4.1",
@@ -25,6 +25,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.74.0",
+    "resend": "^6.12.2",
     "zod": "^4.4.1"
   },
   "devDependencies": {
