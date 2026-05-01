@@ -58,3 +58,14 @@ export function calculateDrawingPower(eligibleStock: number, eligibleReceivables
   const dp = (eligibleStock + eligibleReceivables) * (1 - (marginPercent / 100))
   return { dp, error: null }
 }
+
+export function calculateAgeing(b1: number, b2: number, b3: number, b4: number) {
+  const totalReceivables = b1 + b2 + b3 + b4
+  // Basic interpretation logic based on proportion of old debt
+  const percentageOver90 = totalReceivables > 0 ? (b4 / totalReceivables) * 100 : 0
+  return { 
+    total: totalReceivables, 
+    percentageOver90,
+    error: null 
+  }
+}
