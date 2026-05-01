@@ -38,7 +38,11 @@ export async function POST(request: Request) {
           otpExpiry: new Date(Date.now() + 5 * 60 * 1000),
         },
       });
-      await sendOTPEmail(email, otp);
+      try {
+        await sendOTPEmail(email, otp);
+      } catch (error) {
+        console.error("[api/auth/signin][send-otp]", error);
+      }
       return NextResponse.json({ error: "Email not verified", requiresVerification: true }, { status: 403 });
     }
 
