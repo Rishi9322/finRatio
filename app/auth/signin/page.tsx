@@ -40,10 +40,6 @@ export default function SigninPage() {
       const result = await res.json()
 
       if (!res.ok) {
-        if (result.requiresVerification) {
-          router.push(`/auth/verify-otp?email=${encodeURIComponent(data.email)}`)
-          return
-        }
         throw new Error(result.error || "Sign in failed")
       }
 

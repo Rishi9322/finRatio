@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
-import { hashPassword, generateOTP } from "@/lib/auth";
-import { sendOTPEmail } from "@/lib/email";
+import { hashPassword, createSession } from "@/lib/auth";
 import { z } from "zod";
+
+export const runtime = "nodejs";
 
 const signupSchema = z.object({
   name: z.string().min(2),
@@ -28,23 +29,25 @@ export async function POST(request: Request) {
     }
 
     const hashedPassword = await hashPassword(password);
-    const otp = generateOTP();
-    const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
-
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         name,
         email,
         passwordHash: hashedPassword,
-        otpCode: otp,
-        otpExpiry,
-        isVerified: false,
+        isVerified: true,
       },
     });
 
-    await sendOTPEmail(email, otp);
+    const token = await createSession(user.id);
+    const response = NextResponse.json({ message: "Signup successful" });
+    response.cookies.set("session", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 60 * 60 * 24,
+      path: "/",
+    });
 
-    return NextResponse.json({ message: "OTP sent successfully" });
+    return response;
   } catch (error) {
     console.error("[api/auth/signup]", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });

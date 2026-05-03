@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { getPrisma } from "@/lib/prisma";
-import { verifyPassword, createSession, generateOTP } from "@/lib/auth";
-import { sendOTPEmail } from "@/lib/email";
+import { verifyPassword, createSession } from "@/lib/auth";
 import { z } from "zod";
 
 export const runtime = "nodejs";
@@ -27,24 +26,6 @@ export async function POST(request: Request) {
 
     if (!user || !(await verifyPassword(password, user.passwordHash))) {
       return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
-    }
-
-    if (!user.isVerified) {
-      // Send new OTP
-      const otp = generateOTP();
-      await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          otpCode: otp,
-          otpExpiry: new Date(Date.now() + 5 * 60 * 1000),
-        },
-      });
-      try {
-        await sendOTPEmail(email, otp);
-      } catch (error) {
-        console.error("[api/auth/signin][send-otp]", error);
-      }
-      return NextResponse.json({ error: "Email not verified", requiresVerification: true }, { status: 403 });
     }
 
     // Create session

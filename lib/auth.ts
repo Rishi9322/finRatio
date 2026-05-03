@@ -31,7 +31,3 @@ export async function verifySession(token: string) {
     return null;
   }
 }
-
-export function generateOTP() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}

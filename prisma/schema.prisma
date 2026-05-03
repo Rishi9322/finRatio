@@ -14,8 +14,6 @@ model User {
   name          String?
   passwordHash  String
   isVerified    Boolean  @default(false)
-  otpCode       String?
-  otpExpiry     DateTime?
   createdAt     DateTime @default(now())
   calculations  Calculation[]
 }

@@ -44,7 +44,7 @@ export default function SignupPage() {
         throw new Error(result.error || "Signup failed")
       }
 
-      router.push(`/auth/verify-otp?email=${encodeURIComponent(data.email)}`)
+      router.push("/dashboard")
     } catch (err: unknown) {
       setError((err as Error).message)
     } finally {
