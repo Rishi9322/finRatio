@@ -53,7 +53,7 @@ export default function DrawingPowerCalculator() {
       } else {
         setSaveMessage("Failed to save.")
       }
-    } catch (_) {
+    } catch {
       setSaveMessage("Error saving.")
     } finally {
       setIsSaving(false)

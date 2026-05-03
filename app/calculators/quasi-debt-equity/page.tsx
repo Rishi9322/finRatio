@@ -53,7 +53,7 @@ export default function QuasiDebtEquityCalculator() {
       } else {
         setSaveMessage("Failed to save.")
       }
-    } catch (_) {
+    } catch {
       setSaveMessage("Error saving.")
     } finally {
       setIsSaving(false)

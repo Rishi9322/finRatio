@@ -52,7 +52,7 @@ export default function EBITDACalculator() {
       } else {
         setSaveMessage("Failed to save.")
       }
-    } catch (_) {
+    } catch {
       setSaveMessage("Error saving.")
     } finally {
       setIsSaving(false)
