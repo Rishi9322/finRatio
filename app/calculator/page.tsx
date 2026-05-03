@@ -49,6 +49,7 @@ export default function CalculatorPage() {
   const [isSaving, setIsSaving] = useState(false)
   const [isExporting, setIsExporting] = useState(false)
   const [aiAnalysis, setAiAnalysis] = useState<AIResult | null>(null)
+  const [aiError, setAiError] = useState<string | null>(null)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const resultsRef = useRef<HTMLDivElement>(null)
 
@@ -156,6 +157,13 @@ export default function CalculatorPage() {
         })
       })
       const data = await res.json()
+      if (!res.ok) {
+        setAiAnalysis(null)
+        setAiError(data?.error || "AI analysis is temporarily unavailable.")
+        return
+      }
+
+      setAiError(null)
       setAiAnalysis(data)
     } finally {
       setIsAnalyzing(false)
@@ -320,6 +328,12 @@ export default function CalculatorPage() {
                 </div>
 
                 {/* AI Insights Panel */}
+                {aiError && (
+                  <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 p-4 rounded-2xl text-amber-800 dark:text-amber-200 text-sm">
+                    {aiError}
+                  </div>
+                )}
+
                 {aiAnalysis && (
                   <div className="bg-slate-900 text-white rounded-2xl shadow-xl overflow-hidden border border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-800/50">
@@ -344,13 +358,13 @@ export default function CalculatorPage() {
                         <p className="text-lg font-medium text-white">{aiAnalysis.verdict}</p>
                       </div>
                       <div className="space-y-6">
-                        {aiAnalysis.risks.length > 0 && (
+                        {(aiAnalysis.risks?.length ?? 0) > 0 && (
                           <div>
                             <h4 className="text-sm font-semibold text-red-400 uppercase tracking-wider mb-3 flex items-center gap-2">
                               <AlertCircle className="w-4 h-4" /> Risks Identified
                             </h4>
                             <ul className="space-y-2">
-                              {aiAnalysis.risks.map((risk, i) => (
+                              {(aiAnalysis.risks ?? []).map((risk, i) => (
                                 <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
                                   <span className="text-red-500 mt-0.5">•</span> {risk}
                                 </li>
@@ -361,7 +375,7 @@ export default function CalculatorPage() {
                         <div>
                           <h4 className="text-sm font-semibold text-green-400 uppercase tracking-wider mb-3">Recommendations</h4>
                           <ul className="space-y-2">
-                            {aiAnalysis.recommendations.map((rec, i) => (
+                            {(aiAnalysis.recommendations ?? []).map((rec, i) => (
                               <li key={i} className="text-slate-300 text-sm flex items-start gap-2">
                                 <span className="text-green-500 mt-0.5">•</span> {rec}
                               </li>

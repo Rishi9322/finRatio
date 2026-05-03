@@ -3,7 +3,8 @@ import { getPrisma } from "@/lib/prisma";
 import { verifyPassword, createSession, generateOTP } from "@/lib/auth";
 import { sendOTPEmail } from "@/lib/email";
 import { z } from "zod";
-import { cookies } from "next/headers";
+
+export const runtime = "nodejs";
 
 const signinSchema = z.object({
   email: z.string().email(),
@@ -48,14 +49,15 @@ export async function POST(request: Request) {
 
     // Create session
     const token = await createSession(user.id);
-    cookies().set("session", token, {
+    const response = NextResponse.json({ message: "Sign in successful" });
+    response.cookies.set("session", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: 60 * 60 * 24, // 24 hours
       path: "/",
     });
 
-    return NextResponse.json({ message: "Sign in successful" });
+    return response;
   } catch (error) {
     console.error("[api/auth/signin]", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
