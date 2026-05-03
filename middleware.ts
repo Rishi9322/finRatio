@@ -10,9 +10,7 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("session")?.value;
 
   const isAuthRoute = request.nextUrl.pathname.startsWith("/auth");
-  const isProtectedRoute = 
-    request.nextUrl.pathname.startsWith("/dashboard") || 
-    request.nextUrl.pathname.startsWith("/calculator");
+  const isProtectedRoute = request.nextUrl.pathname.startsWith("/dashboard");
 
   if (isProtectedRoute) {
     if (!token) {
@@ -20,7 +18,7 @@ export async function middleware(request: NextRequest) {
     }
     try {
       await jwtVerify(token, JWT_SECRET);
-    } catch (e) {
+    } catch {
       return NextResponse.redirect(new URL("/auth/signin", request.url));
     }
   }
@@ -30,7 +28,7 @@ export async function middleware(request: NextRequest) {
       try {
         await jwtVerify(token, JWT_SECRET);
         return NextResponse.redirect(new URL("/dashboard", request.url));
-      } catch (e) {
+      } catch {
         // invalid token, let them proceed to auth
       }
     }
@@ -40,5 +38,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/calculator/:path*", "/auth/:path*"],
+  matcher: ["/dashboard/:path*", "/auth/:path*"],
 };

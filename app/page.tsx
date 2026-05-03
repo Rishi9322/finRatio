@@ -12,8 +12,8 @@ export default async function LandingPage() {
     if (payload) isLoggedIn = true
   }
 
-  const ctaLink = isLoggedIn ? "/calculator" : "/auth/signup"
-  const ctaText = isLoggedIn ? "Go to Calculator" : "Get Started"
+  const ctaLink = "/calculator"
+  const ctaText = isLoggedIn ? "Go to Calculator" : "Open Calculator"
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0F172A] flex flex-col">

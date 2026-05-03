@@ -26,7 +26,7 @@ export function Navbar() {
         <div className="flex items-center gap-4">
           <ThemeToggle />
           <Link href="/auth/signin" className="text-sm font-medium text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors hidden sm:block">Sign In</Link>
-          <Link href="/auth/signup" className="text-sm font-medium bg-primary text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors shadow-sm">Get Started</Link>
+          <Link href="/calculator" className="text-sm font-medium bg-primary text-white px-4 py-2 rounded-full hover:bg-blue-600 transition-colors shadow-sm">Get Started</Link>
         </div>
       </div>
     </nav>
