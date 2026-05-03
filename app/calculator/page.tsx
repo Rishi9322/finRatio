@@ -119,10 +119,12 @@ export default function CalculatorPage() {
           results
         })
       })
-      if (res.ok) {
+      const data = await res.json()
+
+      if (data?.success) {
         alert("Calculation saved successfully!")
       } else {
-        alert("Failed to save. Make sure you are signed in.")
+        alert(data?.message || "Failed to save. Make sure you are signed in.")
       }
     } finally {
       setIsSaving(false)
@@ -191,9 +193,9 @@ export default function CalculatorPage() {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8 min-w-0">
           {/* Left: Input Panel */}
-          <div className="w-full lg:w-1/3 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 h-fit">
+          <div className="w-full lg:w-1/3 bg-white dark:bg-slate-900 p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 h-fit min-w-0">
             <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-6">Inputs</h2>
             <form className="space-y-4">
               <div>
@@ -206,7 +208,7 @@ export default function CalculatorPage() {
                 </select>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Annual Sales (₹)</label>
                   <input type="number" {...register("annualSales", { valueAsNumber: true })} className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm" />
@@ -217,7 +219,7 @@ export default function CalculatorPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Gross Margin (%)</label>
                   <input type="number" step="0.1" {...register("grossMargin", { valueAsNumber: true })} className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm" />
@@ -228,7 +230,7 @@ export default function CalculatorPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Supplier Credit (Days)</label>
                   <input type="number" {...register("supplierCreditDays", { valueAsNumber: true })} className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm" />
@@ -239,7 +241,7 @@ export default function CalculatorPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">PID Limit (₹)</label>
                   <input type="number" {...register("pidLimit", { valueAsNumber: true })} className="w-full px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm" />
@@ -253,7 +255,7 @@ export default function CalculatorPage() {
           </div>
 
           {/* Right: Results Panel */}
-          <div className="w-full lg:w-2/3 space-y-6">
+          <div className="w-full lg:w-2/3 space-y-6 min-w-0">
             {error ? (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/50 p-6 rounded-2xl flex items-start gap-4">
                 <AlertCircle className="text-red-500 w-6 h-6 mt-0.5" />
@@ -264,10 +266,10 @@ export default function CalculatorPage() {
               </div>
             ) : results ? (
               <>
-                <div ref={resultsRef} className="bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
-                  <div className="flex justify-between items-center mb-8">
+                <div ref={resultsRef} className="bg-white dark:bg-slate-900 p-4 sm:p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 min-w-0">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
                     <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Calculation Results</h2>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 self-start sm:self-auto">
                       <button onClick={handleSave} disabled={isSaving} className="p-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors text-slate-700 dark:text-slate-300" title="Save Calculation">
                         <Save className="w-5 h-5" />
                       </button>
@@ -292,7 +294,7 @@ export default function CalculatorPage() {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6 mb-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     <div className="p-4 rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
                       <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Sales Generated</p>
                       <p className="text-2xl font-bold text-slate-900 dark:text-white">{formatCurr(results.salesGenerated)}</p>
@@ -311,10 +313,10 @@ export default function CalculatorPage() {
                     </div>
                   </div>
 
-                  <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-blue-100 dark:border-blue-800/50 flex flex-col md:flex-row justify-between items-center gap-4">
+                  <div className="mt-8 p-4 sm:p-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-2xl border border-blue-100 dark:border-blue-800/50 flex flex-col md:flex-row justify-between items-center gap-4 min-w-0">
                     <div>
                       <p className="text-sm font-semibold text-blue-800 dark:text-blue-300 uppercase tracking-wider mb-1">Net Benefit</p>
-                      <p className="text-4xl font-extrabold text-slate-900 dark:text-white">{formatCurr(results.netBenefit)}</p>
+                      <p className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white break-words">{formatCurr(results.netBenefit)}</p>
                     </div>
                     <button 
                       onClick={handleAIAnalysis}
@@ -336,7 +338,7 @@ export default function CalculatorPage() {
 
                 {aiAnalysis && (
                   <div className="bg-slate-900 text-white rounded-2xl shadow-xl overflow-hidden border border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-800/50">
+                    <div className="p-6 border-b border-slate-800 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 bg-slate-800/50">
                       <div className="flex items-center gap-3">
                         <Sparkles className="text-primary w-6 h-6" />
                         <h3 className="text-xl font-bold">AI Financial Analyst</h3>
@@ -349,7 +351,7 @@ export default function CalculatorPage() {
                         {aiAnalysis.healthScore} Health
                       </span>
                     </div>
-                    <div className="p-6 grid md:grid-cols-2 gap-8">
+                    <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div>
                         <h4 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-3">Summary</h4>
                         <p className="text-slate-300 leading-relaxed mb-6">{aiAnalysis.summary}</p>

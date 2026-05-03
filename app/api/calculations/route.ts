@@ -6,10 +6,10 @@ import { cookies } from "next/headers";
 export async function GET() {
   try {
     const token = cookies().get("session")?.value;
-    if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!token) return NextResponse.json([]);
     
     const payload = await verifySession(token);
-    if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!payload) return NextResponse.json([]);
 
     const prisma = await getPrisma();
     const calculations = await prisma.calculation.findMany({
@@ -27,10 +27,22 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const token = cookies().get("session")?.value;
-    if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!token) {
+      return NextResponse.json({
+        success: false,
+        requiresAuth: true,
+        message: "Sign in to save calculations to your dashboard.",
+      });
+    }
     
     const payload = await verifySession(token);
-    if (!payload) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!payload) {
+      return NextResponse.json({
+        success: false,
+        requiresAuth: true,
+        message: "Sign in to save calculations to your dashboard.",
+      });
+    }
 
     const body = await request.json();
     const { calculatorType = "PID", businessType = null, inputs, results } = body;
